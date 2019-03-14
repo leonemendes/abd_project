@@ -1,0 +1,13 @@
+body {
+   background: white;
+   color: green;
+}
+
+button_green {
+   border-radius: 5px; 
+   width: 120px; 
+   height: 80px; 
+   background-color: green 
+}
+
+<button class=“btn-green”> botão verde</butto

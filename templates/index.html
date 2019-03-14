@@ -1,12 +1,17 @@
 <html>
   <head>
-    <title>MJRoBot Lab Live Streaming</title>
+    <title>Airport Bird Deterrent project</title>
     <link rel="stylesheet" href='../static/style.css'/>
   </head>
   <body>
-    <h1>MJRoBot Lab Live Streaming</h1>
-    <h3><img src="{{ url_for('video_feed') }}" width="90%"></h3>
+    <h1><center>Airport Bird Deterrent application</center></h1>
+    <h3><center><img src="{{ url_for('video_feed') }}" width="54%" height="60%"></center></h3>
     <hr>
-    <p> @2018 Developed by MJRoBot.org</p>
+	<h4><center>
+		<button class="button_bv">Camera</button>
+		<form action="/pic" method="post"> <button class="button_bv" type="submit">Take a picture</button></form>	
+	</h4></center>
+    <hr>
+    <p>@2019 Developed by Dylan Nina and Leone Mendes</p>
   </body>
 </html>

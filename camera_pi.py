@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 #
 #  camera_pi.py
-#  
-#  
-#  
+#
+#
+#
 import time
 import io
 import threading
@@ -15,6 +15,7 @@ class Camera(object):
     thread = None  # background thread that reads frames from camera
     frame = None  # current frame is stored here by background thread
     last_access = 0  # time of last client access to the camera
+    cam = None
 
     def initialize(self):
         if Camera.thread is None:
@@ -31,17 +32,24 @@ class Camera(object):
         self.initialize()
         return self.frame
 
+    def save_frame(self):
+        if self.cam == None:
+            print("No camera")
+        else:
+            self.cam.capture('image.png')
+
     @classmethod
     def _thread(cls):
         with picamera.PiCamera() as camera:
+            Camera.cam = camera
             # camera setup
-            camera.resolution = (320, 240)
+            camera.resolution = (854, 480)
             camera.hflip = True
             camera.vflip = True
 
             # let camera warm up
-            camera.start_preview()
-            time.sleep(2)
+            #camera.start_preview()
+            #time.sleep(2)
 
             stream = io.BytesIO()
             for foo in camera.capture_continuous(stream, 'jpeg',
