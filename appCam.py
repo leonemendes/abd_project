@@ -25,7 +25,7 @@ def video_feed():
     return Response(gen(cam),
                    mimetype='multipart/x-mixed-replace; boundary=frame')
 
-@app.route('/function', methods=['GET', 'POST']))
+@app.route('/function', methods=['GET', 'POST'])
 def photo(function):
     if function == 'pic':
         return Response(cam.save_frame())
