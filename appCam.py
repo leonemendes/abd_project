@@ -1,7 +1,7 @@
 from flask import Flask, render_template, Response, request
 from picamera import PiCamera
 
-# Raspberry Pi camera module (requires picamera package, developed by Miguel Grinberg)
+
 from camera_pi import Camera
 
 app = Flask(__name__)
@@ -25,10 +25,10 @@ def video_feed():
     return Response(gen(cam),
                    mimetype='multipart/x-mixed-replace; boundary=frame')
 
-@app.route('/function', methods=['GET', 'POST']))
-def photo(function):
-    if function == 'pic':
-        return Response(cam.save_frame())
+@app.route('/pic', methods=['GET', 'POST'])
+def pic():
+    cam.save_frame()
+    return render_template('index.html')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port =80, debug=True, threaded=True)

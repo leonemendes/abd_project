@@ -1,14 +1,8 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-#
-#  camera_pi.py
-#
-#
-#
 import time
 import io
 import threading
 import picamera
+
 
 
 class Camera(object):
