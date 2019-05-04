@@ -2,7 +2,8 @@ import time
 import io
 import threading
 import picamera
-
+import cv2
+import numpy as np
 
 
 class Camera(object):
@@ -25,7 +26,7 @@ class Camera(object):
     def get_frame(self):
         Camera.last_access = time.time()
         self.initialize()
-        return self.frame
+        return self.frame.tobytes()
 
     def save_frame(self):
         if self.cam == None:
@@ -36,30 +37,45 @@ class Camera(object):
 
     @classmethod
     def _thread(cls):
-        with picamera.PiCamera() as camera:
-            Camera.cam = camera
+        #with picamera.PiCamera() as camera:
+        #with cv2.VideoCapture(1) as camera:
+        camera = cv2.VideoCapture(1)
+        Camera.cam = camera
             # camera setup
-            camera.resolution = (854, 480)
-            camera.hflip = True
-            camera.vflip = True
+            #camera.resolution = (854, 480)
+            #camera.hflip = True
+            #camera.vflip = True
+        camera.set(3, 640)
+        camera.set(4, 480) 
 
             # let camera warm up
             #camera.start_preview()
             #time.sleep(2)
 
-            stream = io.BytesIO()
-            for foo in camera.capture_continuous(stream, 'jpeg',
-                                                 use_video_port=True):
-                # store frame
-                stream.seek(0)
-                cls.frame = stream.read()
+       # stream = io.BytesIO()
+            #for foo in camera.capture_continuous(stream, 'jpeg',
+            #                                     use_video_port=True):
+        res, frame = camera.read()
+   
+        while res:
 
-                # reset stream for next frame
-                stream.seek(0)
-                stream.truncate()
+            res, frame = camera.read()
+            ret, cls.frame = cv2.imencode('.jpg',frame)
 
-                # if there hasn't been any clients asking for frames in
-                # the last 10 seconds stop the thread
-                if time.time() - cls.last_access > 10:
-                    break
+            # store frame
+            #stream.seek(0)
+            #str_frame =  cv2.imencode('.jpeg', frame)[1].tostring()
+            #cls.frame = stream.read()
+
+            # reset stream for next frame
+            #stream.seek(0)
+            #stream.truncate()
+
+            #nparr = np.fromstring(str_frame, np.uint8)
+            #cls.frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+
+            # if there hasn't been any clients asking for frames in
+            # the last 10 seconds stop the thread
+            if time.time() - cls.last_access > 10:
+                break
         cls.thread = None
