@@ -1,0 +1,46 @@
+<html>
+  <head>
+    <title>Airport Bird Deterrent project</title>
+    <link rel="stylesheet" href='../static/style.css'/>
+    <script type="text/javascript" 
+src="../static/jquery-3.3.1.min.js"></script>
+   <!-- <script 
+src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>-->
+  </head>
+  <body>
+    <h1><center>Airport Bird Deterrent application</center></h1>
+    <h3><center><img src="{{ url_for('video_feed') }}" width="54%" 
+height="60%"></center></h3>
+    <hr>
+	<h4>
+		<center>
+                    <button id = 'take_pic'>Take a picture</button>
+                    <a id = "text">0 picture</a>
+		</center>
+	</h4>
+        <h4>
+		<center>
+		    <button id = 'speaker'>Make sound</button>
+		</center>
+	</h4>
+    <form action="" method="post">
+        	<input type="text" name="angle" /><br /><br />
+		<input type="submit" name="Enter" />
+    </form>
+    <hr>
+    <p>@2019 Developed by Dylan Nina and Leone Mendes</p>
+  </body>
+  <script type="text/javascript">
+        $(document).ready(function() {
+            $("#take_pic").click(function() {
+                $.getJSON('/pic', function(dat) {
+                    $("#text").text(dat['num_pic']);
+                });
+            });
+	    $("#speaker").click(function() {
+		$.getJSON('/sound', function(dat) {
+		});
+	    });
+	    
+         });
+  </script> </html>

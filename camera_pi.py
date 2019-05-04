@@ -10,6 +10,7 @@ class Camera(object):
     frame = None  # current frame is stored here by background thread
     last_access = 0  # time of last client access to the camera
     cam = None
+    nbPic = 0
 
     def initialize(self):
         if Camera.thread is None:
@@ -30,7 +31,8 @@ class Camera(object):
         if self.cam == None:
             print("No camera")
         else:
-            self.cam.capture('image.png')
+            self.cam.capture('./pictures/image'+str(self.nbPic)+'.png')
+            self.nbPic += 1
 
     @classmethod
     def _thread(cls):
