@@ -18,22 +18,10 @@ app = Flask(__name__)
 cam = Camera()
 
 
-
 @app.route('/', methods=['GET','POST'])
 def index():
     """Video streaming home page."""
 
-    if request.method == 'POST' :
-        GPIO.cleanup()
-        angle = request.form['angle']
-        x = (int(angle) +72)/18
-        print(int(angle))
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setup(26, GPIO.OUT)
-        GPIO.setwarnings(False)
-        pwm=GPIO.PWM(26,50)
-        pwm.start(x)
-        time.sleep(1)
     return render_template('index.html')
 
 @app.route('/button', methods=['GET','POST'])
@@ -70,12 +58,97 @@ def sound():
     time.sleep(length+10)
     return jsonify({})
 
+@app.route('/laser',methods=['GET','POST'])
+def laser():
+    return jsonify({})
 
 @app.route('/servo', methods=['GET','POST'])
 def servo():
     if request.method == 'POST':
         angle = request.form['angle']
     print(angle)
+
+@app.route('/step', methods=['GET','POST'])
+def step():
+    angle = request.args.get('angle',0 , type=int)
+    print(angle)
+
+    t = 0.02
+    step_out1=37
+    step_out2=35
+    step_out3=33
+    step_out4=31
+
+    GPIO.setmode(GPIO.BOARD)
+    GPIO.setup(step_out1,GPIO.OUT)
+    GPIO.setup(step_out2,GPIO.OUT)
+    GPIO.setup(step_out3,GPIO.OUT)
+    GPIO.setup(step_out4,GPIO.OUT)
+
+    GPIO.output(step_out1,GPIO.LOW)
+    GPIO.output(step_out2,GPIO.LOW)
+    GPIO.output(step_out3,GPIO.LOW)
+    GPIO.output(step_out4,GPIO.LOW)
+
+    y=angle*25/180
+    if y>0 and angle <= 360 :
+
+         for i in range(0,int(y)):
+
+            GPIO.output(step_out1,GPIO.HIGH)
+            GPIO.output(step_out2,GPIO.LOW)
+            GPIO.output(step_out3,GPIO.LOW)
+            GPIO.output(step_out4,GPIO.LOW)
+            time.sleep(t)
+
+            GPIO.output(step_out1,GPIO.LOW)
+            GPIO.output(step_out2,GPIO.LOW)
+            GPIO.output(step_out3,GPIO.HIGH)
+            GPIO.output(step_out4,GPIO.LOW)
+            time.sleep(t)
+
+            GPIO.output(step_out1,GPIO.LOW)
+            GPIO.output(step_out2,GPIO.HIGH)
+            GPIO.output(step_out3,GPIO.LOW)
+            GPIO.output(step_out4,GPIO.LOW)
+            time.sleep(t)
+
+            GPIO.output(step_out1,GPIO.LOW)
+            GPIO.output(step_out2,GPIO.LOW)
+            GPIO.output(step_out3,GPIO.LOW)
+            GPIO.output(step_out4,GPIO.HIGH)
+            time.sleep(t)
+            
+    if y<0 and abs(angle) <= 360: 
+        for i in range(0,-int(y)):
+
+            GPIO.output(step_out1,GPIO.LOW)
+            GPIO.output(step_out2,GPIO.LOW)
+            GPIO.output(step_out3,GPIO.LOW)
+            GPIO.output(step_out4,GPIO.HIGH)
+            time.sleep(t)
+
+            GPIO.output(step_out1,GPIO.LOW)
+            GPIO.output(step_out2,GPIO.HIGH)
+            GPIO.output(step_out3,GPIO.LOW)
+            GPIO.output(step_out4,GPIO.LOW)
+            time.sleep(t)
+
+            GPIO.output(step_out1,GPIO.LOW)
+            GPIO.output(step_out2,GPIO.LOW)
+            GPIO.output(step_out3,GPIO.HIGH)
+            GPIO.output(step_out4,GPIO.LOW)
+            time.sleep(t)
+
+            GPIO.output(step_out1,GPIO.HIGH)
+            GPIO.output(step_out2,GPIO.LOW)
+            GPIO.output(step_out3,GPIO.LOW)
+            GPIO.output(step_out4,GPIO.LOW)
+            time.sleep(t)
+
+    GPIO.cleanup() 
+    return jsonify({})
+
 
 @app.route('/5')
 def move5():

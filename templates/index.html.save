@@ -33,8 +33,7 @@
 	Choisir l'angle en degré <br>
 	Haut Bas <br>
 		<left>
-                        Turn:<input type = text size = 5 name = angle><a href = # id = step>Submit</a>
-			<button id = 'but0'>00</button> <button id = 'butl0'>00</button> <br>
+                        Turn<input type=text size=5  name = angle><buttutton id = 'but0'>00</button> <button id = 'butl0'>00</button> <br>
 			<button id = 'but5'>05</button> <button id = 'butl5'>05</button> <br>
 			<button id = 'but10'>10</button> <button id = 'butl10'>10</button> <br>
 			<button id = 'but15'>15</button> <button id = 'butl15'>15</button> <br>
@@ -66,7 +65,7 @@
                 });
             });
 	    
-            $('a#step').on('click', function()  {
+            $('a#step').on('click',function()  {
                 $.getJSON('/step',{
                 angle: $('input[name = "angle"]').val() 
                 }, function(dat) {  
