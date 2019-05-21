@@ -1,7 +1,7 @@
 from flask import Flask, render_template, Response, request
 from picamera import PiCamera
 from flask import jsonify,json
-
+import numpy as np
 from camera_pi import Camera
 
 
@@ -48,7 +48,7 @@ def pic():
     cam.save_frame()
     num_pic = cam.nbPic
     return jsonify({'num_pic' : str(num_pic)+ " pictures"})
-
+#This application allows to play a sound
 @app.route('/sound', methods=['GET','POST'])
 def sound():
     pygame.init()
@@ -58,16 +58,81 @@ def sound():
     time.sleep(length+10)
     return jsonify({})
 
-@app.route('/laser',methods=['GET','POST'])
-def laser():
+
+#This application allows to choose a time where laser is turned on
+@app.route('/switch', methods=['GET','POST'])
+def switch():
+    out1 = 40
+    GPIO.setmode(GPIO.BOARD)
+    GPIO.setup(out1,GPIO.OUT)
+    val_switch = request.args.get('val_switch',0 , type = int)
+    GPIO.output(out1,GPIO.HIGH)
+    time.sleep(val_switch)
+    value = GPIO.input(out1)
+    print(value)
+    GPIO.output(out1,GPIO.LOW)
+    print(GPIO.input(out1))
+    GPIO.cleanup()
     return jsonify({})
 
+#This application allows to make a full turn of the servo of the ball launcher
+@app.route('/shoot', methods=['GET','POST'])
+def shoot():
+    GPIO.cleanup()
+    x =10
+    print('shot')
+    GPIO.setmode(GPIO.BOARD)
+    GPIO.setup(36, GPIO.OUT)
+    GPIO.setwarnings(False)
+    pwm=GPIO.PWM(36,50)
+    pwm.start(x)
+    time.sleep(0.4)
+    GPIO.cleanup()
+    return jsonify({})
+
+#This application is useless but allows you tu use buttons to control a servo 
 @app.route('/servo', methods=['GET','POST'])
 def servo():
     if request.method == 'POST':
         angle = request.form['angle']
     print(angle)
 
+#This application allows to control the servo for the laser :set the right GPIO of RPi
+@app.route('/servo_las', methods=['GET','POST'])
+def servo_las():
+    GPIO.cleanup() 
+    angle_las = request.args.get('angle_las',0 , type = int)
+    print(angle_las)
+    x = (-float(angle_las)+135)*12/180
+    GPIO.setmode(GPIO.BOARD)
+    GPIO.setup(38, GPIO.OUT)
+    GPIO.setwarnings(False)
+    pwm=GPIO.PWM(38,50)
+    pwm.start(0)
+    time.sleep(1)
+    pwm.ChangeDutyCycle(x)
+    time.sleep(0.5)
+    GPIO.cleanup()
+    return jsonify({})
+
+#This application allows to control the servo to move the ball launcher. Set the right pin 
+@app.route('/servo_ball', methods=['GET','POST'])
+def servo_ball():
+    GPIO.cleanup() 
+    angle_ball = request.args.get('angle_ball',0 , type = int)
+    print(angle_ball)
+
+    x =( int(angle_ball) +77)/18
+    GPIO.setmode(GPIO.BOARD)
+    GPIO.setup(32, GPIO.OUT)
+    GPIO.setwarnings(False)
+    pwm=GPIO.PWM(32,50)
+    pwm.start(x)
+    time.sleep(0.5)
+    GPIO.cleanup()
+    return jsonify({})
+
+# This application allows to control the stepper motor of the station . Set the right pin
 @app.route('/step', methods=['GET','POST'])
 def step():
     angle = request.args.get('angle',0 , type=int)
@@ -146,11 +211,11 @@ def step():
             GPIO.output(step_out4,GPIO.LOW)
             time.sleep(t)
 
-    GPIO.cleanup() 
+     
     return jsonify({})
 
 
-@app.route('/5')
+#@app.route('/5')
 def move5():
     GPIO.cleanup()
     angle = 5

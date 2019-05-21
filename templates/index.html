@@ -17,23 +17,36 @@
 	</h4> --> 
         <h4>
 		<center>
-		    <button id = 'speaker'>Make sound</button>
+		    <button id = 'speaker'>Click to make a sound</button>
 		</center>
 	</h4>
 <!--    <form action="" method="post">
         	<input type="text" name="angle" /><br /><br />
 		<input type="submit" name="Enter" /> 
     </form> --> 
-        <h4> Click to switch  LASER 
-            <center>
-                <button id ='laser'> SWITCH</button>
-            <center>
+       
+       
+	<h4> 
+	    <center>
+	        Turn on Laser<br>
+	        Set the time, in seconds, that the laser will be turned on
+	        <input type = text size = 5 name = val_switch>
+	        <a href = # id = switch>Submit</a>	
+	    </center>
+	</h4>
  
-	<h4> Commande du laser<br>
-	Choisir l'angle en degré <br>
-	Haut Bas <br>
+	<h4> 
+	    <center>
+	        Turn Laser<br>
+	        Please enter a value for the angle:<input type = text size = 5 name = angle_las>
+	        <a href = # id = servo_las>Submit</a>
+	    </center>	
+	</h4>
+	
+	
+	<!-- Haut Bas <br>
 		<left>
-                        Turn:<input type = text size = 5 name = angle><a href = # id = step>Submit</a>
+                       
 			<button id = 'but0'>00</button> <button id = 'butl0'>00</button> <br>
 			<button id = 'but5'>05</button> <button id = 'butl5'>05</button> <br>
 			<button id = 'but10'>10</button> <button id = 'butl10'>10</button> <br>
@@ -45,7 +58,34 @@
 			<button id = 'but40'>40</button> <button id = 'butl40'>40</button>  <br>
 			<button id = 'but45'>45</button> <button id = 'butl45'>45</button>  <br>
 		</left>
+        -->
 	</h4>
+
+        <h4>
+            <center>
+                Turn the station <br>
+                Please enter an angle:   
+               <input type = text size = 5 name = angle>
+               <a href = # id = step>Submit</a>
+            </center>
+        </h4>
+        
+        <h4> 
+            <center>
+                Turn the ball launcher<br>
+	        Please enter a value for the angle:
+	        <input type = text size = 5 name = angle_ball>
+	        <a href = # id = servo_ball>Submit</a>
+	    </center>
+	</h4>
+	
+	<h4>
+	    <center>
+		    <button id = 'shoot'>Click to shoot</button>
+	    </center>
+	</h4>
+        
+
 	
     <hr>
     <p>@2019 Developed by Dylan Nina and Leone Mendes</p>
@@ -60,15 +100,36 @@
 	    $("#speaker").click(function() {
 		$.getJSON('/sound', function(dat) {
 		});
-	    });	    
-            $("#laser").click(function()  {
-                $.getJSON('/laser',function(dat)  {
+	    });	 
+	    
+	    $("#shoot").click(function() {
+		$.getJSON('/shoot', function(dat) {
+		});
+	    });	   
+            
+            $('a#switch').on('click', function()  {
+                $.getJSON('/switch',{
+                val_switch: $('input[name = "val_switch"]').val() 
+                }, function(dat) {  
                 });
             });
-	    
             $('a#step').on('click', function()  {
                 $.getJSON('/step',{
                 angle: $('input[name = "angle"]').val() 
+                }, function(dat) {  
+                });
+            });
+            
+            $('a#servo_las').on('click', function()  {
+                $.getJSON('/servo_las',{
+                angle_las: $('input[name = "angle_las"]').val() 
+                }, function(dat) {  
+                });
+            });
+            
+            $('a#servo_ball').on('click', function()  {
+                $.getJSON('/servo_ball',{
+                angle_ball: $('input[name = "angle_ball"]').val() 
                 }, function(dat) {  
                 });
             });
